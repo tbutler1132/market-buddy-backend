@@ -13,7 +13,7 @@ export const getUser = async (req, res) => {
 }
 
 export const createUser = async (req, res) => {
-    const {username, password, portfolio, transactions, historicalPortfolioValue, cash } = req.body
+    const {username, password, portfolio, transactions, historicalPortfolioValue, cash, lists } = req.body
     // const salt = await bcrypt.genSalt()
     // const hashedPassword = await bcrypt.hash(password, salt)
     const newUser = new User({
@@ -22,6 +22,7 @@ export const createUser = async (req, res) => {
         cash,
         portfolio,
         transactions,
+        lists,
         historicalPortfolioValue
     });
     console.log(newUser)
