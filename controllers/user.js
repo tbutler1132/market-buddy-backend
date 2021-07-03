@@ -34,6 +34,41 @@ export const createUser = async (req, res) => {
     }
 }
 
+//Change in portfolio//
+
+export const addStockToPortfolio = async (req, res) => {
+    const stock = req.body
+    const userId = req.params.id
+
+    // console.log("Stock", stock)
+    // console.log("User", userId)
+
+    const user = await User.findById(userId)
+
+    console.log(user)
+
+    try {
+        user.portfolio.push(stock)
+        user.save()
+        return res.status(200).json(user)
+    } catch (error) {
+        return res.status(400).json({message: error.message})
+    }
+}
+
+export const deleteStock = async (req, res) => {
+
+}
+
+export const createTransaction = async (req, res) => {
+    
+}
+
+export const updateUser = async (req, res) => {
+    //change cash
+    //Update portoflio
+}
+
 
 
 

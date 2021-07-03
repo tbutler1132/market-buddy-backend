@@ -1,12 +1,13 @@
 import express from 'express'
 
-import { getCompany, getStockPrices } from '../controllers/stock.js'
+import { getCompany, getStockPrices, getLatestPrice } from '../controllers/stock.js'
 
 
 const router = express.Router()
 
-router.get('/', getCompany)
+router.get('/company/:symbol', getCompany)
 router.get('/:symbol', getStockPrices)
+router.get('/latestPrice/:symbol', getLatestPrice)
 
 
 export default router

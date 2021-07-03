@@ -31,7 +31,10 @@ const userSchema = new Schema(
     {
         username: String,
         password: String,
-        portfolio: [String],
+        portfolio: [{
+            ticker: String,
+            shares: Number,
+        }],
         cash: {type: Number, default: 10000.21},
         lists: [{
             title: String,
