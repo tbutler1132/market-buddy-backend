@@ -56,17 +56,67 @@ export const addStockToPortfolio = async (req, res) => {
     }
 }
 
-export const deleteStock = async (req, res) => {
+export const deleteStockFromPortfolio = async (req, res) => {
+    const userId = req.params.userId
+    const stockId = req.params.stockId
 
+    const user = await User.findById(userId)
+    const stock = await user.portfolio.id(stockId)
+
+
+    try {
+        stock.remove()
+        await user.save()
+
+        res.status(200).json('Stock succesfully deleted')
+        
+    } catch (error) {
+        return res.status(400).json('Could not delete stock')
+    }
 }
 
-export const createTransaction = async (req, res) => {
+// export const createTransaction = async (req, res) => {
+    
+// }
+
+export const updateUserCash = async (req, res) => {
+    const id = req.params.id
+    const cash = req.body.cash
+
+    const user = await User.findByIdAndUpdate(id, {cash: cash}, {new: true})
+
+    try {
+        user.save()
+
+        res.status(200).json(user)
+    } catch (error) {
+        
+        return res.status(400).json('Could not update user')
+    }
     
 }
 
-export const updateUser = async (req, res) => {
-    //change cash
-    //Update portoflio
+export const updateStock = async (req, res) => {
+    const userId = req.params.userId
+    const stockId = req.params.stockId
+    const shares = req.body.shares
+
+    console.log(shares)
+
+    const user = await User.findById(userId)
+    const stock = await user.portfolio.id(stockId)
+
+    console.log(stock.shares)
+
+    try {
+        stock.shares = shares
+        user.save()
+
+        res.status(200).json(stock)
+    } catch (error) {
+        
+        return res.status(400).json('Could not update stock')
+    }
 }
 
 
