@@ -4,7 +4,6 @@ export const getCompany = async (req, res) => {
 
     const symbol = req.params.symbol
 
-    console.log(symbol)
 
     try {
         const stock = await axios.get(`https://cloud.iexapis.com/stable/stock/${symbol}/company?token=pk_abbd9e2e259e413ea2d01686156d5746&symbols=${symbol}`)
@@ -16,7 +15,6 @@ export const getCompany = async (req, res) => {
 
 export const getStockPrices = async (req, res) => {
 
-    console.log(req.params.symbol)
     const symbols = req.params.symbol
 
     try {

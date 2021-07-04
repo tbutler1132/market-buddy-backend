@@ -25,7 +25,6 @@ export const createUser = async (req, res) => {
         lists,
         historicalPortfolioValue
     });
-    console.log(newUser)
     try {
         await newUser.save()
         return res.status(201).json(newUser)
@@ -37,15 +36,10 @@ export const createUser = async (req, res) => {
 //Change in portfolio//
 
 export const addStockToPortfolio = async (req, res) => {
-    const stock = req.body
+    const stock = req.body.stockObj
     const userId = req.params.id
 
-    // console.log("Stock", stock)
-    // console.log("User", userId)
-
     const user = await User.findById(userId)
-
-    console.log(user)
 
     try {
         user.portfolio.push(stock)
