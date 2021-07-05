@@ -40,7 +40,6 @@ export const addStockToPortfolio = async (req, res) => {
     const userId = req.params.id
 
     const user = await User.findById(userId)
-
     try {
         user.portfolio.push(stock)
         user.save()
@@ -74,10 +73,15 @@ export const deleteStockFromPortfolio = async (req, res) => {
 // }
 
 export const updateUserCash = async (req, res) => {
+    
     const id = req.params.id
     const cash = req.body.cash
 
+  
+
     const user = await User.findByIdAndUpdate(id, {cash: cash}, {new: true})
+
+
 
     try {
         user.save()
@@ -95,12 +99,8 @@ export const updateStock = async (req, res) => {
     const stockId = req.params.stockId
     const shares = req.body.shares
 
-    console.log(shares)
-
     const user = await User.findById(userId)
     const stock = await user.portfolio.id(stockId)
-
-    console.log(stock.shares)
 
     try {
         stock.shares = shares
