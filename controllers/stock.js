@@ -46,3 +46,15 @@ export const addStockToUser = async (req, res) => {
         
     }
 }
+
+export const search = async (req, res) => {
+    const fragment = req.params.fragment
+
+    try {
+       const results = await axios.get(`https://cloud.iexapis.com/stable/search/${fragment}?token=pk_abbd9e2e259e413ea2d01686156d5746`)
+       console.log(results)
+       res.status(200).json(results.data)
+    } catch (error) {
+        
+    }
+}

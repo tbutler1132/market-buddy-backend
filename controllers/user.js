@@ -50,18 +50,21 @@ export const addStockToPortfolio = async (req, res) => {
 }
 
 export const deleteStockFromPortfolio = async (req, res) => {
+    console.log("Hit")
     const userId = req.params.userId
     const stockId = req.params.stockId
+    console.log(stockId)
 
     const user = await User.findById(userId)
     const stock = await user.portfolio.id(stockId)
-
+    console.log(user)
+    
 
     try {
         stock.remove()
         await user.save()
 
-        res.status(200).json('Stock succesfully deleted')
+        res.status(200).json(user)
         
     } catch (error) {
         return res.status(400).json('Could not delete stock')
@@ -95,9 +98,11 @@ export const updateUserCash = async (req, res) => {
 }
 
 export const updateStock = async (req, res) => {
+    console.log(req.body.stock)
     const userId = req.params.userId
     const stockId = req.params.stockId
-    const shares = req.body.shares
+    const shares = req.body.stock.shares
+    console.log(shares)
 
     const user = await User.findById(userId)
     const stock = await user.portfolio.id(stockId)
@@ -106,7 +111,7 @@ export const updateStock = async (req, res) => {
         stock.shares = shares
         user.save()
 
-        res.status(200).json(stock)
+        res.status(200).json(user)
     } catch (error) {
         
         return res.status(400).json('Could not update stock')
