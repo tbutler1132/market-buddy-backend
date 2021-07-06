@@ -52,9 +52,20 @@ export const search = async (req, res) => {
 
     try {
        const results = await axios.get(`https://cloud.iexapis.com/stable/search/${fragment}?token=pk_abbd9e2e259e413ea2d01686156d5746`)
-       console.log(results)
        res.status(200).json(results.data)
     } catch (error) {
         
+    }
+}
+
+export const getHistoricalData = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const data = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/ytd?token=pk_abbd9e2e259e413ea2d01686156d5746`)
+
+        res.status(200).json(data.data)
+    } catch (error) {
+        res.status(400).json('Could not get data')
     }
 }

@@ -119,5 +119,57 @@ export const updateStock = async (req, res) => {
 }
 
 
+export const addStockToList = async (req, res) => {
+    const userId = req.params.userId
+    const listId = req.params.listId
+    const stock = req.body.stock
+
+    const user = await User.findById(userId)
+    const list = user.lists.id(listId)
+    list.stocks.push(stock)
+
+    try {
+        user.save()
+
+        res.status(200).json(user)
+    } catch (error) {
+        
+    }
+}
+
+export const removeStockFromList = async (req, res) => {
+    const userId = req.params.userId
+    const listId = req.params.listId
+    const stock = req.params.stockId
+    console.log(req.params)
+    const user = await User.findById(userId)
+    const list = user.lists.id(listId)
+    list.stocks = list.stocks.filter(el => el !== stock)
+    
+
+    try {
+        user.save()
+        res.status(200).json(user)
+    } catch (error) {
+        
+    }
+}
+
+export const addList = async (req, res) => {
+    const list = req.body
+    const userId = req.params.id
+    console.l
+    const user = await User.findById(userId)
+    user.lists.push(list)
+
+    try {
+        user.save()
+
+        res.status(200).json(user)  
+    } catch (error) {
+        
+    }
+}
+
 
 
