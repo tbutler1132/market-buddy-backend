@@ -50,15 +50,12 @@ export const addStockToPortfolio = async (req, res) => {
 }
 
 export const deleteStockFromPortfolio = async (req, res) => {
-    console.log("Hit")
+
     const userId = req.params.userId
     const stockId = req.params.stockId
-    console.log(stockId)
 
     const user = await User.findById(userId)
-    const stock = await user.portfolio.id(stockId)
-    console.log(user)
-    
+    const stock = await user.portfolio.id(stockId)    
 
     try {
         stock.remove()
