@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 
 export const signin = async (req, res) => {
-    console.log(req.body)
+
     const {username, password} = req.body
 
     try {
@@ -16,7 +16,6 @@ export const signin = async (req, res) => {
 
         if(!isPasswordCorrect) return res.status(400).json('Invalid Credentials')
 
-        console.log(existingUser)
         const token = jwt.sign({username: existingUser.username, _id: existingUser._id}, 'test', {expiresIn: "1h"})
 
         return res.status(200).json({result: existingUser, token})
@@ -142,11 +141,9 @@ export const updateUserCash = async (req, res) => {
 }
 
 export const updateStock = async (req, res) => {
-    console.log(req.body.stock)
     const userId = req.params.userId
     const stockId = req.params.stockId
     const shares = req.body.stock.shares
-    console.log(shares)
 
     const user = await User.findById(userId)
     const stock = await user.portfolio.id(stockId)
@@ -186,7 +183,6 @@ export const removeStockFromList = async (req, res) => {
     const userId = req.params.userId
     const listId = req.params.listId
     const stock = req.params.stockId
-    console.log(req.params)
     const user = await User.findById(userId)
     const list = user.lists.id(listId)
     list.stocks = list.stocks.filter(el => el !== stock)
@@ -218,7 +214,6 @@ export const addList = async (req, res) => {
 }
 
 export const deleteList = async (req, res) => {
-    console.log("Hey ")
     const listId = req.params.listId
     const userId = req.params.userId
 
