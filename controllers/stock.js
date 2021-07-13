@@ -23,7 +23,7 @@ export const getStockPrices = async (req, res) => {
     const symbols = req.params.symbol
 
     try {
-        const stock = await axios.get(`https://cloud.iexapis.com/v1/stock/market/previous/batch?token=${apiKey}&symbols=${symbols}&types=chart`)
+        const stock = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=${symbols}`)
         res.status(200).json(stock.data)
     } catch (error) {
         res.status(400).json(error.error)
