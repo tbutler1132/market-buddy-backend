@@ -18,7 +18,7 @@ app.use(cors());
 app.use('/stocks', stockRoutes)
 app.use('/users', userRoutes)
 
-const CONNECTION_URL = `mongodb+srv://tbutler1132:${mdb}@cluster0.ui8ug.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+const CONNECTION_URL = `mongodb://tbutler1132:${mdb}@tbutler1132-mongo-production/timhood`
 
 const PORT = process.env.PORT|| 7000;
 
