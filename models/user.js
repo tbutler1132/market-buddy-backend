@@ -35,7 +35,7 @@ const userSchema = new Schema(
             ticker: String,
             shares: Number,
         }],
-        cash: {type: Number, default: 10000.21},
+        cash: {type: Number, default: 10000},
         lists: [{
             title: String,
             stocks: [String]
