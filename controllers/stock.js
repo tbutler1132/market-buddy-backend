@@ -4,7 +4,6 @@ dotenv.config()
 
 const apiKey = process.env.API_KEY
 
-
 export const getCompany = async (req, res) => {
 
     const symbol = req.params.symbol

@@ -4,7 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 //
 dotenv.config()
-const mdb = process.env.MONGO_PASSWORD
+const mdb = process.env.MONGO_DB_URI
 
 import stockRoutes from './routes/stock.js'
 import userRoutes from './routes/user.js'
@@ -18,7 +18,7 @@ app.use(cors());
 app.use('/stocks', stockRoutes)
 app.use('/users', userRoutes)
 
-const CONNECTION_URL = `mongodb+srv://guest:1234@cluster0.ui8ug.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+const CONNECTION_URL = `${mdb}`
 
 const PORT = process.env.PORT|| 7000;
 
