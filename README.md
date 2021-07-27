@@ -1,6 +1,6 @@
 # Market Buddy  
 
-[I'm an inline-style link](https://youtu.be/AgCsgbkwLh0)
+[Recorded Demo](https://youtu.be/AgCsgbkwLh0)
 
 ## Installation
 
@@ -23,5 +23,3 @@ tbutler1132@gmail.com
 
 Note: Unfortunately the project requires a premium IEX Cloud plan to run locally. While I aim to deploy the project to the internet in the near future, I will also be continually recording video demos of the project. In the event that the cost of hosting the project becomes prohibitive, those demos as well as the published code will provide a comprehensive overview of the process and results of the project.
 
-Latest Demo:
-https://youtu.be/AgCsgbkwLh0
