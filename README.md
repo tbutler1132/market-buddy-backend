@@ -2,8 +2,6 @@
 
 [Recorded Demo](https://youtu.be/AgCsgbkwLh0)
 
-## Installation
-
 ## Email
 tbutler1132@gmail.com
   
