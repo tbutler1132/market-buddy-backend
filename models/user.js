@@ -4,6 +4,17 @@ import uniqueValidator from 'mongoose-unique-validator'
 
 const Schema = mongoose.Schema
 
+const transactionSchema = new Schema(
+    {
+        buy: Boolean,
+        ticker: String,
+        shares: Number
+    },
+    {
+        timestamps: true
+    }
+)
+
 const userSchema = new Schema( 
     {
         username: {type: String, unique: true},

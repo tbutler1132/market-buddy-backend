@@ -1,6 +1,11 @@
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import passport from 'passport'
+import GoogleStrategy from 'passport-google-oauth'
+
+
+
 
 
 export const signin = async (req, res) => {
@@ -13,6 +18,8 @@ export const signin = async (req, res) => {
         if(!existingUser) return res.status(404).json("User does not exist")
 
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
+
+        console.log(isPasswordCorrect)
 
         if(!isPasswordCorrect) return res.status(400).json('Invalid Credentials')
 
