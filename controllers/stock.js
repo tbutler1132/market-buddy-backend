@@ -19,8 +19,6 @@ export const getCompany = async (req, res) => {
 
 export const getStockPrices = async (req, res) => {
 
-    console.log("News")
-
     const symbols = req.params.symbol
 
     try {
@@ -77,12 +75,11 @@ export const getHistoricalData = async (req, res) => {
 }
 
 export const getNews = async (req, res) => {
-    console.log(req.query.ass)
-    const symbol = req.params.id
+    const symbols = req.params.id
     try {
-        const news = await axios.get(`https://cloud.iexapis.com/stable/stock/${symbol}/news?token=${apiKey}`)
+        const news = await axios.get(`https://cloud.iexapis.com/stable/stock/market/news/last/1?token=${apiKey}&symbols=${symbols}`)
 
-        res.status(200).json(news.data)
+        res.status(200).json(news.data.flat())
     } catch (error) {
         
     }
