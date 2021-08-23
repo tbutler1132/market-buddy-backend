@@ -75,11 +75,10 @@ export const getHistoricalData = async (req, res) => {
 }
 
 export const getNews = async (req, res) => {
-    const symbols = req.params.id
+    const symbol = req.params.id
     try {
-        const news = await axios.get(`https://cloud.iexapis.com/stable/stock/market/news/last/1?token=${apiKey}&symbols=${symbols}`)
-
-        res.status(200).json(news.data.flat())
+        const news = await axios.get(`https://cloud.iexapis.com/stable/stock/${symbol}/news/last/5?token=${apiKey}`)
+        res.status(200).json(news.data)
     } catch (error) {
         
     }
