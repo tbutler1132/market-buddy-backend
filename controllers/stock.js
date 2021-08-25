@@ -85,10 +85,9 @@ export const getNews = async (req, res) => {
 }
 
 
-export const getCollection = async (req, res) => {
-    const type = req.params.type
+export const getMostActive = async (req, res) => {
     try {
-        const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/${type}/iexvolume?token=${apiKey}`)
+        const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/list?collectionName=mostactive&token=${apiKey}`)
 
 
         const finalData = []
@@ -101,6 +100,24 @@ export const getCollection = async (req, res) => {
         res.status(200).json(finalData)
     } catch (error) {
         res.status(500).json('error')
+    }
+}
+
+export const getTagCollection = async (req, res) => {
+
+    console.log("hit")
+
+    const tag = req.params.type
+
+    try {
+
+        const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/tag?collectionName=${tag}&token=${apiKey}`)
+
+
+        res.status(200).json(collection.data)
+    } catch (error) {
+
+        res.status(500).json('error') 
     }
 }
 
