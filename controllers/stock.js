@@ -90,10 +90,11 @@ export const getCollection = async (req, res) => {
     try {
         const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/${type}/iexvolume?token=${apiKey}`)
 
+
         const finalData = []
 
         collection.data.forEach(stock => {
-            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice})
+            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: stock.change})
         })
 
 
