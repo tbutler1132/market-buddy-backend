@@ -83,3 +83,24 @@ export const getNews = async (req, res) => {
         
     }
 }
+
+
+export const getCollection = async (req, res) => {
+    const type = req.params.type
+    try {
+        const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/${type}/iexvolume?token=${apiKey}`)
+
+        const finalData = []
+
+        collection.data.forEach(stock => {
+            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice})
+        })
+
+
+        res.status(200).json(finalData)
+    } catch (error) {
+        res.status(500).json('error')
+    }
+}
+
+
