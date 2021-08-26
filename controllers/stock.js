@@ -103,15 +103,20 @@ export const getMostActive = async (req, res) => {
     }
 }
 
-export const getTagCollection = async (req, res) => {
-
-    console.log("hit")
+export const getCollection = async (req, res) => {
 
     const tag = req.params.type
+    const name = req.query.name
 
     try {
 
-        const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/tag?collectionName=${tag}&token=${apiKey}`)
+        const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/${tag}?collectionName=${name}&token=${apiKey}`)
+
+        const finalData = []
+
+        collection.data.forEach(stock => {
+            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: stock.change})
+        })
 
 
         res.status(200).json(collection.data)

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getCompany, getStockPrices, getLatestPrice, search, getHistoricalData, getNews, getMostActive, getTagCollection } from '../controllers/stock.js'
+import { getCompany, getStockPrices, getLatestPrice, search, getHistoricalData, getNews, getMostActive, getCollection } from '../controllers/stock.js'
 
 
 const router = express.Router()
@@ -11,7 +11,7 @@ router.get('/latestPrice/:symbol', getLatestPrice)
 router.get('/search/:fragment', search)
 router.get('/historical/:id', getHistoricalData)
 router.get('/collection/:type', getMostActive)
-router.get('/collection/tag/:type', getTagCollection)
+router.get('/collection/tag/:type', getCollection)
 router.get('/news/:id', getNews)
 
 
