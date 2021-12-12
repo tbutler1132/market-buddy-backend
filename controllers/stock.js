@@ -114,12 +114,12 @@ export const getCollection = async (req, res) => {
 
         const finalData = []
 
+
         collection.data.forEach(stock => {
-            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: stock.change})
+            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: stock.change, companyName: stock.companyName})
         })
 
-
-        res.status(200).json(collection.data)
+        res.status(200).json(finalData)
     } catch (error) {
 
         res.status(500).json('error') 
