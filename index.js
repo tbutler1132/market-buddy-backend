@@ -6,6 +6,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 const mdb = process.env.MONGO_DB_URI
 
+const apiKey = process.env.API_KEY
+
 import stockRoutes from './routes/stock.js'
 import userRoutes from './routes/user.js'
 
@@ -28,6 +30,12 @@ mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: tr
 
 app.get('/', (req, res) => {
     res.send('I am running')
+})
+
+app.get("/stream", (req, res) => {
+  res.setHeader("Content-Type", `Accept: text/event-stream' 'https://cloud-sse.iexapis.com/stable/news-stream?token=${apiKey}&symbols=spy`)
+  console.log(res)
+  res.write("data: " + `${res}\n\n`)
 })
 
 
