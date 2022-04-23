@@ -14,6 +14,7 @@ export const getCompany = async (req, res) => {
         res.status(200).json(stock.data)
     } catch (error) {
         console.error(error)
+        res.status(500).json(error)
     }
 }
 
@@ -68,9 +69,20 @@ export const getHistoricalData = async (req, res) => {
     try {
         const data = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/ytd?token=${apiKey}`)
 
-        res.status(200).json(data.data)
+        const formattedData = []
+        
+        data.data.forEach(point => {
+            const date = point['date'].slice(5, 10)
+            const obj = {
+                name: date,
+                price: point['close']
+            }
+                formattedData.push(obj)
+        })
+
+        res.status(200).json(formattedData)
     } catch (error) {
-        res.status(400).json('Could not get data')
+        res.status(500).json('Could not get data')
     }
 }
 
@@ -108,21 +120,55 @@ export const getCollection = async (req, res) => {
     const tag = req.params.type
     const name = req.query.name
 
+    console.log
+
     try {
 
         const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/${tag}?collectionName=${name}&token=${apiKey}`)
 
+        console.log(collection, "COLL")
+
+
         const finalData = []
 
+        const sorted = collection.data.sort((a, b) => b.latestPrice - a.latestPrice).slice(0, 15)
 
-        collection.data.forEach(stock => {
+
+        sorted.forEach(stock => {
             finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: stock.change, companyName: stock.companyName})
         })
+
 
         res.status(200).json(finalData)
     } catch (error) {
 
         res.status(500).json('error') 
+    }
+}
+
+export const getFinancials = async (req, res) => {
+    
+    const { symbol } = req.params
+
+    try {
+
+        const { data } = await axios.get(`https://cloud.iexapis.com/stable/stock/${symbol}/financials?token=${apiKey}&symbols=${symbol}`)
+
+        res.status(200).json(data.financials[0])
+    } catch (error) {
+
+        res.status(500).json(error)
+    }
+}
+
+export const getTags = async (req, res) => {
+    try {
+        const { data } = await axios.get(`https://cloud.iexapis.com/stable/ref-data/sectors?token=${apiKey}`)
+
+        res.status(200).json(data)
+    } catch (error) {
+
+        res.status(500).json(error)
     }
 }
 
