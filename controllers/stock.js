@@ -68,13 +68,20 @@ export const getHistoricalData = async (req, res) => {
     const range = req.query.range
 
     try {
-        const data = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}`)
+        const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}&chartCloseOnly=true`)
+
+        let data = range === "dynamic" ? response.data.data : response.data        
 
         const formattedData = []
         
-        data.data.forEach(point => {
+        data.forEach(point => {
             const [year, month, day] = point.date.split("-")
-            const date = month + "/" + day + "/" + year.substring(2, 4)
+            let date
+            if(range === "dynamic" || range === "1d"){
+                date = point.label
+            }else{
+                date = month + "/" + day + "/" + year.substring(2, 4)
+            }
             const obj = {
                 name: date,
                 price: point['close']
@@ -84,7 +91,8 @@ export const getHistoricalData = async (req, res) => {
 
         res.status(200).json(formattedData)
     } catch (error) {
-        res.status(500).json('Could not get data')
+
+        res.status(500).json(error)
     }
 }
 
@@ -103,11 +111,10 @@ export const getMostActive = async (req, res) => {
     try {
         const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/list?collectionName=mostactive&token=${apiKey}`)
 
-
         const finalData = []
 
         collection.data.forEach(stock => {
-            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: stock.change})
+            finalData.push({symbol: stock.symbol, latestPrice: stock.latestPrice, change: (stock.changePercent * 100).toFixed(2)})
         })
 
 
