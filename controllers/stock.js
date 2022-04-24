@@ -65,14 +65,16 @@ export const search = async (req, res) => {
 
 export const getHistoricalData = async (req, res) => {
     const id = req.params.id
+    const range = req.query.range
 
     try {
-        const data = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/ytd?token=${apiKey}`)
+        const data = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}`)
 
         const formattedData = []
         
         data.data.forEach(point => {
-            const date = point['date'].slice(5, 10)
+            const [year, month, day] = point.date.split("-")
+            const date = month + "/" + day + "/" + year.substring(2, 4)
             const obj = {
                 name: date,
                 price: point['close']
