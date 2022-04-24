@@ -68,7 +68,7 @@ export const getHistoricalData = async (req, res) => {
     const range = req.query.range
 
     try {
-        const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}&chartCloseOnly=true`)
+        const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}&chartCloseOnly=true&chartInterval=${range === "dynamic" || range === "1d" ? "15" : "1"}`)
 
         let data = range === "dynamic" ? response.data.data : response.data        
 
@@ -77,7 +77,7 @@ export const getHistoricalData = async (req, res) => {
         data.forEach(point => {
             const [year, month, day] = point.date.split("-")
             let date
-            if(range === "dynamic" || range === "1d"){
+            if(response.data.range === "1d" || range === "1d"){
                 date = point.label
             }else{
                 date = month + "/" + day + "/" + year.substring(2, 4)
@@ -172,6 +172,17 @@ export const getTags = async (req, res) => {
         res.status(200).json(data)
     } catch (error) {
 
+        res.status(500).json(error)
+    }
+}
+
+export const getAnalystRatings = async (req, res) => {
+    const { symbol } = req.params
+    try {
+       const { data } = await axios.get(`https://cloud.iexapis.com/stable/time-series/CORE_ESTIMATES/${symbol}?token=${apiKey}`)
+
+       res.status(200).json(data[0])
+    } catch (error) {
         res.status(500).json(error)
     }
 }
