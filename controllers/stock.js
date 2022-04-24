@@ -120,14 +120,9 @@ export const getCollection = async (req, res) => {
     const tag = req.params.type
     const name = req.query.name
 
-    console.log
-
     try {
 
         const collection = await axios.get(`https://cloud.iexapis.com/stable/stock/market/collection/${tag}?collectionName=${name}&token=${apiKey}`)
-
-        console.log(collection, "COLL")
-
 
         const finalData = []
 
