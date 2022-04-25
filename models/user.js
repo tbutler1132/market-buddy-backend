@@ -31,8 +31,7 @@ const userSchema = new Schema(
         historicalPortfolioValue: [{
             value: Number,
             date: Date
-        }]
-        
+        }], 
     },
     {
         timestamps: true

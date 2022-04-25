@@ -1,11 +1,101 @@
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import passport from 'passport'
-import GoogleStrategy from 'passport-google-oauth'
+import axios from 'axios'
+import dotenv from 'dotenv'
+dotenv.config()
+
+const apiKey = process.env.API_KEY
 
 
+export const loginDemo = async (req, res) => {
 
+    function generateRandom(min = 0, max = 100) {
+
+        // find diff
+        let difference = max - min;
+    
+        // generate random number 
+        let rand = Math.random();
+    
+        // multiply with difference 
+        rand = Math.floor( rand * difference);
+    
+        // add with min value 
+        rand = rand + min;
+    
+        return rand;
+    }
+
+    function getDateXDaysAgo(numOfDays, date = new Date()) {
+        const daysAgo = new Date(date.getTime());
+      
+        daysAgo.setDate(date.getDate() - numOfDays);
+      
+        return daysAgo;
+    }
+
+    
+    
+    try {
+
+        await User.deleteMany({})
+
+        const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=aapl,snap,tsla&filter=symbol,close`)
+
+        let value = 0
+
+        for(let close of data){
+            if(close['symbol'] === 'AAPL'){
+                value = value + close['close'] * 2
+            }
+            if(close['symbol'] === 'TSLA'){
+                value = value + close['close'] * 3
+            }
+            if(close['symbol'] === 'SNAP'){
+                value = value + close['close'] * 4
+            }
+        }
+
+        const histArr = []
+
+        Array.from(Array(365)).forEach((_, i) => {
+            histArr.push({
+                value: generateRandom(value - 500, value + 500).toFixed(2),
+                date:  getDateXDaysAgo(i + 1).toLocaleDateString("en-US"),
+            });
+        })
+
+        const demoUser = new User({
+            username: "Warren",
+            password: 123,
+            cash: 10000,
+            portfolio: [
+                {
+                    ticker: "TSLA",
+                    shares: 3
+                },
+                {
+                    ticker: "AAPL",
+                    shares: 2
+                },
+                {
+                    ticker: "SNAP",
+                    shares: 4
+                },
+            ],
+            lists: [],
+            historicalPortfolioValue: histArr
+        }) 
+
+        await demoUser.save()
+
+        res.status(200).json(demoUser)
+    } catch (error) {   
+        console.log(error)
+        res.status(500).json(error)
+    }
+}
 
 
 export const signin = async (req, res) => {

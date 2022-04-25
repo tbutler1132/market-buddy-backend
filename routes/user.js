@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { getUser, createUser, addStockToPortfolio, deleteStockFromPortfolio, updateStock, updateUserCash, addStockToList, removeStockFromList, addList, 
-        signin, signup, deleteList
+        signin, signup, deleteList, loginDemo
 
 } from '../controllers/user.js'
 
@@ -23,6 +23,7 @@ router.delete('/:userId/lists/:listId', deleteList)
 
 router.post('/signin', signin)
 router.post('/signup', signup)
+router.post('/demo', loginDemo)
 
 
 
