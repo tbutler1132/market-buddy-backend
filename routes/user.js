@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { getUser, createUser, addStockToPortfolio, deleteStockFromPortfolio, updateStock, updateUserCash, addStockToList, removeStockFromList, addList, 
-        signin, signup, deleteList, loginDemo
+        signin, signup, deleteList, loginDemo, getCurrentPortfolioValue
 
 } from '../controllers/user.js'
 
@@ -10,7 +10,8 @@ import auth from '../middleware/auth.js'
 
 const router = express.Router()
 
-router.get('/:id', auth, getUser)
+router.get('/:id', getUser)
+router.get('/:id/currentPortfolioValue', getCurrentPortfolioValue)
 router.post('/', createUser)
 router.post('/:id/stocks', addStockToPortfolio)
 router.delete('/:userId/stocks/:stockId', deleteStockFromPortfolio)

@@ -27,6 +27,10 @@ export const loginDemo = async (req, res) => {
         return rand;
     }
 
+    function genRealisticValues(currentVal, idx) {
+
+    }
+
     function getDateXDaysAgo(numOfDays, date = new Date()) {
         const daysAgo = new Date(date.getTime());
       
@@ -41,30 +45,35 @@ export const loginDemo = async (req, res) => {
 
         await User.deleteMany({})
 
-        const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=aapl,snap,tsla&filter=symbol,close`)
+        const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=aapl,snap,tsla&filter=symbol,close,previousClose`)
 
         let value = 0
 
+        let closeTiming = data[0].close ? 'close' : 'previousClose'
+
         for(let close of data){
             if(close['symbol'] === 'AAPL'){
-                value = value + close['close'] * 2
+                value = value + close[closeTiming] * 2
             }
             if(close['symbol'] === 'TSLA'){
-                value = value + close['close'] * 3
+                value = value + close[closeTiming] * 3
             }
             if(close['symbol'] === 'SNAP'){
-                value = value + close['close'] * 4
+                value = value + close[closeTiming] * 4
             }
         }
+
+        console.log("VAL", value)
 
         const histArr = []
 
         Array.from(Array(365)).forEach((_, i) => {
             histArr.push({
-                value: generateRandom(value - 500, value + 500).toFixed(2),
+                value: generateRandom(value - i * 2 + 50, value - i * 2 - 50).toFixed(2),
                 date:  getDateXDaysAgo(i + 1).toLocaleDateString("en-US"),
             });
         })
+
 
         const demoUser = new User({
             username: "Warren",
@@ -85,12 +94,14 @@ export const loginDemo = async (req, res) => {
                 },
             ],
             lists: [],
-            historicalPortfolioValue: histArr
+            historicalPortfolioValue: histArr.reverse()
         }) 
 
         await demoUser.save()
 
-        res.status(200).json(demoUser)
+        const token = jwt.sign({username: demoUser.username, _id: demoUser._id}, 'test', {expiresIn: "1h"})
+
+        res.status(200).json({result: demoUser, token})
     } catch (error) {   
         console.log(error)
         res.status(500).json(error)
@@ -325,6 +336,31 @@ export const deleteList = async (req, res) => {
     } catch (error) {
         
         return res.status(400).json('Could not remove list')
+    }
+}
+
+export const getCurrentPortfolioValue = async (req, res) => {
+    console.log("Hit")
+    const { id } = req.params
+    try {
+        const user = await User.findById(id, 'portfolio')
+        console.log(user)
+        const symbols = user.portfolio.map(holding => holding.ticker.toLowerCase()).join()
+        const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=${symbols}&filter=latestPrice,symbol`)
+        let value = 0
+        user.portfolio.forEach(holding => {
+            const stock = data.find(stock => stock.symbol === holding.ticker)
+            value = value + stock.latestPrice * holding.shares
+        })
+
+        const date = new Date 
+        const str = date.toLocaleDateString('en-us')
+        
+
+        res.status(200).json({value: Number(value.toFixed(2)), date: str})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
     }
 }
 

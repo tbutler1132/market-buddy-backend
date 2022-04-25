@@ -20,7 +20,7 @@ export const getCompany = async (req, res) => {
 
 export const getStockPrices = async (req, res) => {
 
-    const symbols = req.params.symbol
+    const symbols = req.query.symbols
 
     try {
         const stock = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=${symbols}`)

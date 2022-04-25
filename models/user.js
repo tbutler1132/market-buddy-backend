@@ -30,7 +30,7 @@ const userSchema = new Schema(
         }],
         historicalPortfolioValue: [{
             value: Number,
-            date: Date
+            date: String
         }], 
     },
     {
