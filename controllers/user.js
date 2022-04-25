@@ -63,8 +63,6 @@ export const loginDemo = async (req, res) => {
             }
         }
 
-        console.log("VAL", value)
-
         const histArr = []
 
         Array.from(Array(365)).forEach((_, i) => {
@@ -101,7 +99,7 @@ export const loginDemo = async (req, res) => {
 
         const token = jwt.sign({username: demoUser.username, _id: demoUser._id}, 'test', {expiresIn: "1h"})
 
-        res.status(200).json({result: demoUser, token})
+        res.status(200).json({result: demoUser._id, token})
     } catch (error) {   
         console.log(error)
         res.status(500).json(error)
@@ -156,9 +154,12 @@ export const signup = async (req, res) => {
 
 export const getUser = async (req, res) => {
     const { id } = req.params
+    const { fields } = req.query
+
+    console.log("Triggered")
 
     try {
-        const user = await User.findById(id)
+        const user = await User.findById(id, fields)
 
         return res.status(200).json(user)
     } catch (error) {
@@ -308,11 +309,12 @@ export const removeStockFromList = async (req, res) => {
 export const addList = async (req, res) => {
     const list = req.body
     const userId = req.params.id
-    const user = await User.findById(userId)
-    user.lists.push(list)
-
+    
     try {
-        user.save()
+
+        const user = await User.findById(userId)
+        user.lists.push(list)
+        await user.save()
 
         res.status(200).json(user)  
     } catch (error) {
@@ -340,11 +342,9 @@ export const deleteList = async (req, res) => {
 }
 
 export const getCurrentPortfolioValue = async (req, res) => {
-    console.log("Hit")
     const { id } = req.params
     try {
         const user = await User.findById(id, 'portfolio')
-        console.log(user)
         const symbols = user.portfolio.map(holding => holding.ticker.toLowerCase()).join()
         const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=${symbols}&filter=latestPrice,symbol`)
         let value = 0
@@ -360,6 +360,60 @@ export const getCurrentPortfolioValue = async (req, res) => {
         res.status(200).json({value: Number(value.toFixed(2)), date: str})
     } catch (error) {
         console.log(error)
+        res.status(500).json(error)
+    }
+}
+
+export const getHistoricalPortfolioValue = async (req, res) => {
+    const { id } = req.params
+    try {
+        const user = await User.findById(id, 'historicalPortfolioValue')
+
+        res.status(200).json(user)
+    } catch (error) {
+        
+        res.status(500).json(error)
+    }
+}
+
+export const getPortfolioData = async (req, res) => {
+    const { id } = req.params
+    
+    try {
+        const { portfolio } = await User.findById(id, 'portfolio')
+        const symbols = portfolio.map(holdings => holdings.ticker).join()
+        const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=${symbols}&filter=symbol,latestPrice,changePercent`)
+
+        const adjustedWithSharesOwned = []
+
+        data.map(stock => {
+            const holding = portfolio.find(holding => holding.ticker === stock.symbol)
+            stock["sharesOwned"] = holding.shares
+            stock["_id"] = holding._id
+            adjustedWithSharesOwned.push(stock)
+        })
+        
+        res.status(200).json(adjustedWithSharesOwned)
+    } catch (error) {
+     
+        res.status(500).json(error)
+    }
+}
+
+export const updatePosition = async (req, res) => {
+    const { id, positionId } = req.params 
+    const data = req.body 
+
+    try {
+        const user = await User.findById(id) 
+        const position = user.portfolio.id(positionId)
+        position.shares = position.shares + data.adjustment
+        await user.save()
+
+        res.status(200).json(user)
+        //Find subdoc in portfolio with ticker equal to symbol, update shares to be current shares + data
+    } catch (error) {
+        
         res.status(500).json(error)
     }
 }
