@@ -5,7 +5,6 @@ import dotenv from 'dotenv'
 //
 dotenv.config()
 const mdb = process.env.MONGO_DB_URI
-
 const apiKey = process.env.API_KEY
 
 import stockRoutes from './routes/stock.js'
