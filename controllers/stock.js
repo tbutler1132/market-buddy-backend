@@ -68,7 +68,7 @@ export const getHistoricalData = async (req, res) => {
     const range = req.query.range
 
     try {
-        const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}&chartCloseOnly=true&chartInterval=${range === "dynamic" || range === "1d" ? "15" : "1"}`)
+        const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${id}/chart/${range}?token=${apiKey}&chartCloseOnly=true`)
 
         let data = range === "dynamic" ? response.data.data : response.data        
 
