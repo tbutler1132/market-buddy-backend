@@ -67,7 +67,7 @@ export const loginDemo = async (req, res) => {
 
         Array.from(Array(365)).forEach((_, i) => {
             histArr.push({
-                value: generateRandom(value - i * 2 + 50, value - i * 2 - 50).toFixed(2),
+                value: generateRandom(value - i * 2 + 25, value - i * 2 - 25).toFixed(2),
                 date:  getDateXDaysAgo(i + 1).toLocaleDateString("en-US"),
             });
         })
