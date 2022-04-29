@@ -405,15 +405,31 @@ export const updatePosition = async (req, res) => {
     const data = req.body 
 
     try {
-        const user = await User.findById(id) 
+        const user = await User.findById(id, 'portfolio cash') 
+        console.log(user)
         const position = user.portfolio.id(positionId)
         position.shares = position.shares + data.adjustment
+        user.cash = user.cash + data.price
         await user.save()
 
         res.status(200).json(user)
         //Find subdoc in portfolio with ticker equal to symbol, update shares to be current shares + data
     } catch (error) {
         
+        res.status(500).json(error)
+    }
+}
+
+export const getUserPosition = async (req, res) => {
+    const { id, symbol } = req.params 
+
+    try {
+        const user = await User.findById(id, 'portfolio')
+        const holding = user.portfolio.find(holding => holding.ticker === symbol)
+        console.log(holding)
+        res.status(200).json(holding)
+    } catch (error) {
+        console.log(error)
         res.status(500).json(error)
     }
 }

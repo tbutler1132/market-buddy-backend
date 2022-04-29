@@ -2,7 +2,7 @@ import express from 'express'
 
 import { getUser, createUser, addStockToPortfolio, deleteStockFromPortfolio, updateStock, updateUserCash, addStockToList, removeStockFromList, addList, 
         signin, signup, deleteList, loginDemo, getCurrentPortfolioValue, getHistoricalPortfolioValue,
-        getPortfolioData, updatePosition
+        getPortfolioData, updatePosition, getUserPosition
 
 } from '../controllers/user.js'
 
@@ -26,6 +26,7 @@ router.delete('/:userId/lists/:listId', deleteList)
 router.get('/:id/historicalPortfolioValue', getHistoricalPortfolioValue)
 router.get('/:id/portfolioData', getPortfolioData)
 router.patch('/:id/transaction/:positionId', updatePosition)
+router.get('/:id/portfolio/:symbol', getUserPosition)
 
 router.post('/signin', signin)
 router.post('/signup', signup)
