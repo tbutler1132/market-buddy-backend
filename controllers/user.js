@@ -441,13 +441,17 @@ export const updatePosition = async (req, res) => {
     try {
         const user = await User.findById(id, 'portfolio cash') 
         const position = user.portfolio.id(positionId)
+        if(position.shares + data.adjustment < 0){
+            console.log("You can't sell more shares than you own")
+            return res.status(400).json("You can't sell more shares than you own")
+        }
         position.shares = position.shares + data.adjustment
         user.cash = user.cash + data.price
         await user.save()
 
         res.status(200).json(user)
     } catch (error) {
-        
+        console.log(error)
         res.status(500).json(error)
     }
 }
