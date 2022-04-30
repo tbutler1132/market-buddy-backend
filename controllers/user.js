@@ -27,7 +27,45 @@ export const loginDemo = async (req, res) => {
         return rand;
     }
 
-    function genRealisticValues(currentVal, idx) {
+
+    function generateHistoricalPortfolioValues(idx, finalValue){
+        //I want it to bounce a little within a certain range
+        //Half way through make a big leap
+        //3/4 make a small dive
+
+        let range = 5
+
+        let n = 0
+        let ran = generateRandom(15, 25)
+
+
+        if(idx < 365 / 2 && idx > 71){
+            n = 100
+            ran = generateRandom(30, generateRandom(60, 80)) 
+        }else{
+            n = 700
+        }
+
+        if(idx > 340){
+            n = 10
+            ran = generateRandom(25, 35)
+        }
+
+        if (idx > 30 && idx < 70 && idx % 8 === 0){
+            n = 350
+            ran = generateRandom(10, generateRandom(70, 120))
+        }
+
+        if(idx > 250){
+            n = 125
+        }
+
+        if(idx >= 25 && idx <= 70){
+            n = 1000
+        }
+
+        let str = (finalValue - n) / 365
+        return generateRandom(idx, idx + ran) * str
 
     }
 
@@ -65,9 +103,9 @@ export const loginDemo = async (req, res) => {
 
         const histArr = []
 
-        Array.from(Array(365)).forEach((_, i) => {
+        Array.from(Array(364)).forEach((_, i) => {
             histArr.push({
-                value: generateRandom(value - i * 2 + 25, value - i * 2 - 25).toFixed(2),
+                value: generateHistoricalPortfolioValues(365 - i, value).toFixed(2),
                 date:  getDateXDaysAgo(i + 1).toLocaleDateString("en-US"),
             });
         })
