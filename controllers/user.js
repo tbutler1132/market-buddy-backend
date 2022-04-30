@@ -156,8 +156,6 @@ export const getUser = async (req, res) => {
     const { id } = req.params
     const { fields } = req.query
 
-    console.log("Triggered")
-
     try {
         const user = await User.findById(id, fields)
 
@@ -368,7 +366,6 @@ export const getHistoricalPortfolioValue = async (req, res) => {
     const { id } = req.params
     try {
         const user = await User.findById(id, 'historicalPortfolioValue')
-
         res.status(200).json(user)
     } catch (error) {
         
@@ -403,7 +400,6 @@ export const getPortfolioData = async (req, res) => {
 export const updatePosition = async (req, res) => {
     const { id, positionId } = req.params 
     const data = req.body 
-    console.log("Body", data)
     try {
         const user = await User.findById(id, 'portfolio cash') 
         const position = user.portfolio.id(positionId)
@@ -418,13 +414,27 @@ export const updatePosition = async (req, res) => {
     }
 }
 
+export const createPosition = async (req, res) => {
+    const { id } = req.params 
+    const data = req.body 
+
+    try {
+        const user = await User.findById(id, 'portfolio')
+        user.portfolio.push(data)
+        await user.save()
+        res.status(200).json(user)
+    } catch (error) {
+        
+        res.status(500).json(error)
+    }
+}
+
 export const getUserPosition = async (req, res) => {
     const { id, symbol } = req.params 
 
     try {
         const user = await User.findById(id, 'portfolio')
         const holding = user.portfolio.find(holding => holding.ticker === symbol)
-        console.log(holding)
         res.status(200).json(holding)
     } catch (error) {
         console.log(error)
