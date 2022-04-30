@@ -441,6 +441,17 @@ export const getHistoricalPortfolioValue = async (req, res) => {
     try {
         const { historicalPortfolioValue } = await User.findById(id, 'historicalPortfolioValue')
         const timeRangePortfolioValue = historicalPortfolioValue.slice(historicalPortfolioValue.length - totalDays)
+        let arr = []
+
+        // timeRangePortfolioValue.forEach((point) => {
+        //     arr.push({
+        //         name: point.date,
+        //         value: point.value
+        //     })
+        // })
+    
+        // arr.push({name: currentData.date, value: currentData.value})
+
         res.status(200).json(timeRangePortfolioValue)
     } catch (error) {
         
