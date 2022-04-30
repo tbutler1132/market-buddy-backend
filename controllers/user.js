@@ -417,7 +417,6 @@ export const updatePosition = async (req, res) => {
 export const createPosition = async (req, res) => {
     const { id } = req.params 
     const { cost, ticker, shares } = req.body 
-    console.log("HIT")
     try {
         const user = await User.findById(id, 'portfolio cash')
         user.portfolio.push({ticker, shares})
