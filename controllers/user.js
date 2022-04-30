@@ -401,10 +401,42 @@ export const getCurrentPortfolioValue = async (req, res) => {
 }
 
 export const getHistoricalPortfolioValue = async (req, res) => {
+
+    
+    
     const { id } = req.params
+    const { range } = req.query
+
+    function calculateDaysSoFar(){
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 0);
+        const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+        const oneDay = 1000 * 60 * 60 * 24;
+        return Math.floor(diff / oneDay);
+    }
+
+    let totalDays = 0
+
+    switch(range){
+        case "3m":
+            totalDays = 90
+            break
+        case "6m":
+            totalDays = 180
+            break
+        case "1m":
+            totalDays = 30
+            break
+        case "ytd":
+            totalDays = calculateDaysSoFar()
+        default:
+            totalDays = 30
+    }
+
     try {
-        const user = await User.findById(id, 'historicalPortfolioValue')
-        res.status(200).json(user)
+        const { historicalPortfolioValue } = await User.findById(id, 'historicalPortfolioValue')
+        const timeRangePortfolioValue = historicalPortfolioValue.slice(historicalPortfolioValue.length - totalDays)
+        res.status(200).json(timeRangePortfolioValue)
     } catch (error) {
         
         res.status(500).json(error)
