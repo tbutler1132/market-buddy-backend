@@ -428,7 +428,6 @@ export const getHistoricalPortfolioValue = async (req, res) => {
             totalDays = 30
             break
         case "ytd":
-            console.log("hit")
             totalDays = calculateDaysSoFar()
         default:
             totalDays = 30
