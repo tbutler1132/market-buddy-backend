@@ -114,11 +114,11 @@ export const loginDemo = async (req, res) => {
         const demoUser = new User({
             username: "Warren",
             password: 123,
-            cash: 10000,
+            cash: 1000,
             portfolio: [
                 {
                     ticker: "TSLA",
-                    shares: 3
+                    shares: 2
                 },
                 {
                     ticker: "AAPL",
@@ -380,7 +380,7 @@ export const deleteList = async (req, res) => {
 export const getCurrentPortfolioValue = async (req, res) => {
     const { id } = req.params
     try {
-        const user = await User.findById(id, 'portfolio')
+        const user = await User.findById(id, 'portfolio cash')
         const symbols = user.portfolio.map(holding => holding.ticker.toLowerCase()).join()
         const { data } = await axios.get(`https://cloud.iexapis.com/v1/stock/market/quote/latestprice/batch?token=${apiKey}&symbols=${symbols}&filter=latestPrice,symbol`)
         let value = 0
@@ -393,7 +393,7 @@ export const getCurrentPortfolioValue = async (req, res) => {
         const str = date.toLocaleDateString('en-us')
         
 
-        res.status(200).json({value: Number(value.toFixed(2)), date: str})
+        res.status(200).json({value: Number(value.toFixed(2)) + user.cash, date: str})
     } catch (error) {
         console.log(error)
         res.status(500).json(error)
@@ -428,9 +428,14 @@ export const getHistoricalPortfolioValue = async (req, res) => {
             totalDays = 30
             break
         case "ytd":
+            console.log("hit")
             totalDays = calculateDaysSoFar()
         default:
             totalDays = 30
+    }
+
+    if(range === "ytd"){
+        totalDays = calculateDaysSoFar()
     }
 
     try {
@@ -476,6 +481,12 @@ export const updatePosition = async (req, res) => {
         if(position.shares + data.adjustment < 0){
             console.log("You can't sell more shares than you own")
             return res.status(400).json("You can't sell more shares than you own")
+        }
+        if(position.shares + data.adjustment === 0){
+            position.remove()
+            user.cash = user.cash + data.price
+            await user.save()
+            return res.status(200).json(user)
         }
         position.shares = position.shares + data.adjustment
         user.cash = user.cash + data.price
