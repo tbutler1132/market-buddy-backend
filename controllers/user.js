@@ -416,15 +416,16 @@ export const updatePosition = async (req, res) => {
 
 export const createPosition = async (req, res) => {
     const { id } = req.params 
-    const data = req.body 
-
+    const { cost, ticker, shares } = req.body 
+    console.log("HIT")
     try {
-        const user = await User.findById(id, 'portfolio')
-        user.portfolio.push(data)
+        const user = await User.findById(id, 'portfolio cash')
+        user.portfolio.push({ticker, shares})
+        user.cash = user.cash + cost
         await user.save()
         res.status(200).json(user)
     } catch (error) {
-        
+        console.log(error)
         res.status(500).json(error)
     }
 }
