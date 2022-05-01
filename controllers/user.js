@@ -520,7 +520,7 @@ export const createPosition = async (req, res) => {
         res.status(200).json(user)
     } catch (error) {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json("You don't have enough cash")
     }
 }
 
