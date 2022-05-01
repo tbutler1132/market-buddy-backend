@@ -1,10 +1,5 @@
-[Live Demo](https://6268077cd7636f4f80d9c5d6--eloquent-hamilton-1cc3f5.netlify.app/home)
+[Live Demo](https://eloquent-hamilton-1cc3f5.netlify.app)
   
-The live demo does not currently include user authentication and only displays public routes
-
-[Recorded Demo](https://www.loom.com/share/55eb37e85ea74aa18f3b2500c524f7c7)
-
-
 
 ## Email
 tbutler1132@gmail.com
