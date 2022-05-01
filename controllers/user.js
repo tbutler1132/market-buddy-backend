@@ -490,7 +490,7 @@ export const updatePosition = async (req, res) => {
         const position = user.portfolio.id(positionId)
         if(position.shares + data.adjustment < 0){
             console.log("You can't sell more shares than you own")
-            res.status(400)
+            return res.status(400).json("You can't sell more shares than you own")
         }
         if(position.shares + data.adjustment === 0){
             position.remove()
@@ -505,7 +505,7 @@ export const updatePosition = async (req, res) => {
         res.status(200).json(user)
     } catch (error) {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json("You don't have enough cash")
     }
 }
 
